@@ -302,13 +302,13 @@ namespace ManuscriptCalculator
             button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(232, 229, 223);
             button.TextColor = foreColor;
             button.Text = text;
-            button.Font = new Font("Microsoft YaHei UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
-            button.CornerRadius = 10;
+            button.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Bold, GraphicsUnit.Point);
+            button.CornerRadius = 12;
             button.TabStop = false;
 
             Size measured = TextRenderer.MeasureText(text, button.Font);
-            int width = Math.Max(34, measured.Width + extraPadding);
-            button.Size = new Size(width, 34);
+            int width = Math.Max(44, measured.Width + extraPadding + 6);
+            button.Size = new Size(width, 36);
             return button;
         }
 

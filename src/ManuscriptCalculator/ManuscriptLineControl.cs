@@ -351,11 +351,11 @@ namespace ManuscriptCalculator
             if (_flashCount >= 6)
             {
                 _flashTimer.Stop();
-                _result.BackColor = BackColor;
+                _result.ForeColor = Color.FromArgb(22, 22, 22);
             }
             else
             {
-                _result.BackColor = _flashOn ? Color.FromArgb(220, 228, 255) : BackColor;
+                _result.ForeColor = _flashOn ? UiPalette.AccentStart : Color.FromArgb(22, 22, 22);
             }
         }
     }
