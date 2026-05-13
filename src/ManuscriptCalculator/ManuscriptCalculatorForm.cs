@@ -258,34 +258,22 @@ namespace ManuscriptCalculator
         {
             BufferedPanel footer = new BufferedPanel();
             footer.BackColor = Color.Transparent;
+            footer.Height = 30;
 
-            Label left = new Label();
-            left.AutoSize = true;
-            left.Text = "关闭窗口会收起到托盘";
-            left.Font = new Font("Microsoft YaHei UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
-            left.ForeColor = UiPalette.InkMuted;
+            Label shortcuts = new Label();
+            shortcuts.AutoSize = true;
+            shortcuts.Text = "Enter 下一行    ↑↓ 切换行    Esc 收起";
+            shortcuts.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            shortcuts.ForeColor = UiPalette.InkSoft;
 
-            Label right = new Label();
-            right.AutoSize = true;
-            right.Text = "Enter 下一行    Esc 收起";
-            right.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
-            right.ForeColor = UiPalette.InkMuted;
-
-            footer.Controls.Add(left);
-            footer.Controls.Add(right);
+            footer.Controls.Add(shortcuts);
 
             footer.Resize += delegate
             {
-                left.Location = new Point(4, 6);
-                right.Location = new Point(Math.Max(260, footer.ClientSize.Width - right.Width - 4), 6);
+                shortcuts.Location = new Point(4, 8);
             };
 
             return footer;
-        }
-
-        private static int GetHintX(int minimumX, int preferredX)
-        {
-            return Math.Max(minimumX, preferredX);
         }
 
         private static int CenterY(int containerHeight, int controlHeight)
