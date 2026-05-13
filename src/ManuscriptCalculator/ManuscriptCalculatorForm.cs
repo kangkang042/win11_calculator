@@ -52,7 +52,7 @@ namespace ManuscriptCalculator
 
             Panel titleBar = BuildTitleBar();
             titleBar.Dock = DockStyle.Top;
-            titleBar.Height = 78;
+            titleBar.Height = 92;
 
             BufferedPanel footer = BuildFooter();
             footer.Dock = DockStyle.Bottom;
