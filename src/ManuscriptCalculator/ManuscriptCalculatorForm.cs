@@ -53,7 +53,7 @@ namespace ManuscriptCalculator
 
             Panel titleBar = BuildTitleBar();
             titleBar.Dock = DockStyle.Top;
-            titleBar.Height = 56;
+            titleBar.Height = 68;
 
             BufferedPanel footer = BuildFooter();
             footer.Dock = DockStyle.Bottom;
@@ -234,13 +234,13 @@ namespace ManuscriptCalculator
             title.ForeColor = UiPalette.InkStrong;
             title.MouseDown += BeginDrag;
 
-            _copyButton = CreateCommandButton("复制结果", Color.White, UiPalette.InkStrong, 18);
+            _copyButton = CreateCommandButton("复制结果", Color.White, UiPalette.InkStrong, 24);
             _copyButton.Click += delegate { CopyActiveResult(); };
 
-            _clearButton = CreateCommandButton("清空", Color.White, UiPalette.InkStrong, 18);
+            _clearButton = CreateCommandButton("清空", Color.White, UiPalette.InkStrong, 24);
             _clearButton.Click += delegate { ClearAllLines(); };
 
-            _hideButton = CreateCommandButton("✕", Color.White, UiPalette.InkStrong, 12);
+            _hideButton = CreateCommandButton("✕", Color.White, UiPalette.InkStrong, 16);
             _hideButton.CornerRadius = 18;
             _hideButton.Click += delegate { RequestHide(); };
 
@@ -258,8 +258,8 @@ namespace ManuscriptCalculator
                 title.Location = new Point(32, CenterY(titleBar.ClientSize.Height, title.Height));
 
                 _hideButton.Location = new Point(right - _hideButton.Width, CenterY(titleBar.ClientSize.Height, _hideButton.Height));
-                _clearButton.Location = new Point(_hideButton.Left - 8 - _clearButton.Width, CenterY(titleBar.ClientSize.Height, _clearButton.Height));
-                _copyButton.Location = new Point(_clearButton.Left - 8 - _copyButton.Width, CenterY(titleBar.ClientSize.Height, _copyButton.Height));
+                _clearButton.Location = new Point(_hideButton.Left - 14 - _clearButton.Width, CenterY(titleBar.ClientSize.Height, _clearButton.Height));
+                _copyButton.Location = new Point(_clearButton.Left - 14 - _copyButton.Width, CenterY(titleBar.ClientSize.Height, _copyButton.Height));
             };
 
             return titleBar;
@@ -304,12 +304,12 @@ namespace ManuscriptCalculator
             button.TextColor = foreColor;
             button.Text = text;
             button.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Bold, GraphicsUnit.Point);
-            button.CornerRadius = 12;
+            button.CornerRadius = 14;
             button.TabStop = false;
 
             Size measured = TextRenderer.MeasureText(text, button.Font);
-            int width = Math.Max(44, measured.Width + extraPadding + 6);
-            button.Size = new Size(width, 36);
+            int width = Math.Max(54, measured.Width + extraPadding + 8);
+            button.Size = new Size(width, 40);
             return button;
         }
 

@@ -356,12 +356,10 @@ namespace ManuscriptCalculator
             else if (_flashOn)
             {
                 _result.Text = "  " + LastEvaluation.DisplayText;
-                _result.ForeColor = UiPalette.AccentStart;
             }
             else
             {
                 _result.Text = "= " + LastEvaluation.DisplayText;
-                _result.ForeColor = Color.FromArgb(22, 22, 22);
             }
         }
     }
