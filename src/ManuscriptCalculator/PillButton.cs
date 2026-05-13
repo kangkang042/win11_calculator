@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -8,12 +9,15 @@ namespace ManuscriptCalculator
     {
         private bool _isHovered;
         private bool _isPressed;
-        private int _cornerRadius = 17;
+        private int _cornerRadius = 10;
         private Color _fillColor = Color.White;
         private Color _hoverFillColor = Color.White;
         private Color _pressedFillColor = Color.White;
         private Color _borderColor = Color.Transparent;
         private Color _textColor = Color.Black;
+        private Color _currentFill;
+        private readonly Timer _animTimer;
+        private int _animStep;
 
         public PillButton()
         {
@@ -25,17 +29,18 @@ namespace ManuscriptCalculator
             BackColor = UiPalette.CanvasTop;
             Cursor = Cursors.Hand;
             Size = new Size(88, 34);
-            Font = new Font("Microsoft YaHei UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            Font = new Font("Microsoft YaHei UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
+            _currentFill = FillColor;
+
+            _animTimer = new Timer();
+            _animTimer.Interval = 20;
+            _animTimer.Tick += OnAnimTick;
         }
 
         public int CornerRadius
         {
             get { return _cornerRadius; }
-            set
-            {
-                _cornerRadius = value;
-                Invalidate();
-            }
+            set { _cornerRadius = value; Invalidate(); }
         }
 
         public Color FillColor
@@ -44,6 +49,7 @@ namespace ManuscriptCalculator
             set
             {
                 _fillColor = value;
+                if (!_isHovered && !_isPressed) _currentFill = value;
                 Invalidate();
             }
         }
@@ -51,56 +57,42 @@ namespace ManuscriptCalculator
         public Color HoverFillColor
         {
             get { return _hoverFillColor; }
-            set
-            {
-                _hoverFillColor = value;
-                Invalidate();
-            }
+            set { _hoverFillColor = value; Invalidate(); }
         }
 
         public Color PressedFillColor
         {
             get { return _pressedFillColor; }
-            set
-            {
-                _pressedFillColor = value;
-                Invalidate();
-            }
+            set { _pressedFillColor = value; Invalidate(); }
         }
 
         public Color BorderColor
         {
             get { return _borderColor; }
-            set
-            {
-                _borderColor = value;
-                Invalidate();
-            }
+            set { _borderColor = value; Invalidate(); }
         }
 
         public Color TextColor
         {
             get { return _textColor; }
-            set
-            {
-                _textColor = value;
-                Invalidate();
-            }
+            set { _textColor = value; Invalidate(); }
         }
 
-        protected override void OnMouseEnter(System.EventArgs e)
+        protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
             _isHovered = true;
-            Invalidate();
+            _animStep = 0;
+            _animTimer.Start();
         }
 
-        protected override void OnMouseLeave(System.EventArgs e)
+        protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
             _isHovered = false;
             _isPressed = false;
-            Invalidate();
+            _animStep = 0;
+            _animTimer.Start();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -123,6 +115,45 @@ namespace ManuscriptCalculator
             }
         }
 
+        private void OnAnimTick(object sender, EventArgs e)
+        {
+            _animStep++;
+            float t = Math.Min(1f, _animStep / 5f);
+            t = t * t * (3f - 2f * t); // ease in-out
+
+            if (_isPressed)
+            {
+                _currentFill = LerpColor(FillColor, PressedFillColor, 1f);
+            }
+            else if (_isHovered)
+            {
+                _currentFill = LerpColor(FillColor, HoverFillColor, t);
+            }
+            else
+            {
+                _currentFill = LerpColor(
+                    _currentFill,
+                    FillColor,
+                    t);
+            }
+
+            if (t >= 1f)
+            {
+                _animTimer.Stop();
+            }
+
+            Invalidate();
+        }
+
+        private static Color LerpColor(Color a, Color b, float t)
+        {
+            return Color.FromArgb(
+                (int)(a.A + (b.A - a.A) * t),
+                (int)(a.R + (b.R - a.R) * t),
+                (int)(a.G + (b.G - a.G) * t),
+                (int)(a.B + (b.B - a.B) * t));
+        }
+
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             using (SolidBrush brush = new SolidBrush(BackColor))
@@ -142,22 +173,18 @@ namespace ManuscriptCalculator
                 return;
             }
 
-            Color currentFill = FillColor;
-            if (!Enabled)
+            Color fill = Enabled ? _currentFill : Color.FromArgb(235, 235, 235);
+            float scale = _isPressed ? 0.97f : 1f;
+
+            if (scale < 1f)
             {
-                currentFill = Color.FromArgb(235, 235, 235);
-            }
-            else if (_isPressed)
-            {
-                currentFill = PressedFillColor;
-            }
-            else if (_isHovered)
-            {
-                currentFill = HoverFillColor;
+                int dw = (int)(rect.Width * (1f - scale) / 2f);
+                int dh = (int)(rect.Height * (1f - scale) / 2f);
+                rect.Inflate(-dw, -dh);
             }
 
             using (GraphicsPath path = UiHelpers.CreateRoundedRectangle(rect, CornerRadius))
-            using (SolidBrush brush = new SolidBrush(currentFill))
+            using (SolidBrush brush = new SolidBrush(fill))
             {
                 e.Graphics.FillPath(brush, path);
 
@@ -165,7 +192,6 @@ namespace ManuscriptCalculator
                 {
                     using (Pen pen = new Pen(BorderColor))
                     {
-                        // Draw inside the rectangle
                         pen.Alignment = PenAlignment.Inset;
                         e.Graphics.DrawPath(pen, path);
                     }
