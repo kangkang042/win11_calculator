@@ -10,7 +10,6 @@ namespace ManuscriptCalculator
 
         private readonly TextBox _editor;
         private readonly Label _placeholder;
-        private readonly Label _equalsLabel;
         private readonly Label _result;
         private readonly ToolTip _copyToolTip;
         private bool _isActive;
@@ -59,19 +58,13 @@ namespace ManuscriptCalculator
             _placeholder.Size = new Size(360, 32);
             _placeholder.Click += delegate { FocusEditor(); };
 
-            _equalsLabel = new Label();
-            _equalsLabel.AutoSize = true;
-            _equalsLabel.Font = new Font("Cascadia Mono", 19F, FontStyle.Bold, GraphicsUnit.Point);
-            _equalsLabel.ForeColor = Color.FromArgb(22, 22, 22);
-            _equalsLabel.Text = "=";
-            _equalsLabel.TextAlign = ContentAlignment.MiddleLeft;
-
             _result = new Label();
             _result.AutoSize = false;
             _result.AutoEllipsis = true;
             _result.Font = new Font("Cascadia Mono", 19F, FontStyle.Bold, GraphicsUnit.Point);
             _result.ForeColor = Color.FromArgb(22, 22, 22);
             _result.TextAlign = ContentAlignment.MiddleRight;
+            _result.Text = "=";
             _result.Click += OnResultClicked;
 
             _copyToolTip = new ToolTip();
@@ -82,7 +75,6 @@ namespace ManuscriptCalculator
 
             Controls.Add(_placeholder);
             Controls.Add(_editor);
-            Controls.Add(_equalsLabel);
             Controls.Add(_result);
 
             Resize += delegate { LayoutInternal(); };
@@ -134,20 +126,16 @@ namespace ManuscriptCalculator
 
             if (!state.HasExpression)
             {
-                _equalsLabel.Visible = false;
-                _result.Text = "";
+                _result.Text = "=";
                 _result.ForeColor = UiPalette.InkSoft;
             }
             else if (state.Success)
             {
-                _equalsLabel.Visible = true;
-                _equalsLabel.ForeColor = Color.FromArgb(22, 22, 22);
-                _result.Text = state.DisplayText;
+                _result.Text = "= " + state.DisplayText;
                 _result.ForeColor = Color.FromArgb(22, 22, 22);
             }
             else
             {
-                _equalsLabel.Visible = false;
                 _result.Text = state.ErrorMessage;
                 _result.ForeColor = UiPalette.Error;
             }
@@ -180,7 +168,6 @@ namespace ManuscriptCalculator
             BackColor = backColor;
             _editor.BackColor = backColor;
             _placeholder.BackColor = backColor;
-            _equalsLabel.BackColor = backColor;
             _result.BackColor = backColor;
             Invalidate();
         }
@@ -236,8 +223,8 @@ namespace ManuscriptCalculator
         {
             int left = 26;
             int rightPadding = 22;
-            int resultAreaWidth = Math.Min(400, Math.Max(210, Width / 3));
-            int editorWidth = Math.Max(140, Width - left - rightPadding - resultAreaWidth - 22);
+            int resultWidth = Math.Min(380, Math.Max(190, Width / 3));
+            int editorWidth = Math.Max(140, Width - left - rightPadding - resultWidth - 22);
             int editorHeight = Math.Max(36, _editor.PreferredHeight + 6);
             int editorTop = Math.Max(10, (Height - editorHeight) / 2);
             int placeholderTop = editorTop;
@@ -248,10 +235,8 @@ namespace ManuscriptCalculator
             _placeholder.Location = new Point(left + HorizontalTextPadding, placeholderTop);
             _placeholder.Size = new Size(Math.Max(120, editorWidth - HorizontalTextPadding), editorHeight);
 
-            int equalsWidth = _equalsLabel.PreferredWidth;
-            _equalsLabel.Location = new Point(Width - rightPadding - resultAreaWidth, 10);
-            _result.Location = new Point(_equalsLabel.Right, 10);
-            _result.Size = new Size(Math.Max(60, Width - _result.Left - rightPadding), 46);
+            _result.Location = new Point(Width - resultWidth - rightPadding, 10);
+            _result.Size = new Size(resultWidth, 46);
         }
 
         private void ApplyEditorMargins()
@@ -365,11 +350,18 @@ namespace ManuscriptCalculator
             if (_flashCount >= 6)
             {
                 _flashTimer.Stop();
+                _result.Text = "= " + LastEvaluation.DisplayText;
                 _result.ForeColor = Color.FromArgb(22, 22, 22);
+            }
+            else if (_flashOn)
+            {
+                _result.Text = "  " + LastEvaluation.DisplayText;
+                _result.ForeColor = UiPalette.AccentStart;
             }
             else
             {
-                _result.ForeColor = _flashOn ? UiPalette.AccentStart : Color.FromArgb(22, 22, 22);
+                _result.Text = "= " + LastEvaluation.DisplayText;
+                _result.ForeColor = Color.FromArgb(22, 22, 22);
             }
         }
     }

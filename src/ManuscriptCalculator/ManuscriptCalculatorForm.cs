@@ -240,7 +240,7 @@ namespace ManuscriptCalculator
             _clearButton = CreateCommandButton("清空", Color.White, UiPalette.InkStrong, 18);
             _clearButton.Click += delegate { ClearAllLines(); };
 
-            _hideButton = CreateCommandButton("✕", Color.White, UiPalette.InkSoft, 12);
+            _hideButton = CreateCommandButton("✕", Color.White, UiPalette.InkStrong, 12);
             _hideButton.CornerRadius = 18;
             _hideButton.Click += delegate { RequestHide(); };
 
@@ -298,9 +298,9 @@ namespace ManuscriptCalculator
             bool isAccent = backColor.ToArgb() == UiPalette.AccentStart.ToArgb();
 
             button.FillColor = backColor;
-            button.HoverFillColor = isAccent ? ControlPaint.Light(backColor, 0.06F) : Color.FromArgb(244, 245, 249);
-            button.PressedFillColor = isAccent ? ControlPaint.Dark(backColor, 0.06F) : Color.FromArgb(232, 234, 240);
-            button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(218, 220, 228);
+            button.HoverFillColor = isAccent ? ControlPaint.Light(backColor, 0.08F) : Color.FromArgb(238, 240, 246);
+            button.PressedFillColor = isAccent ? ControlPaint.Dark(backColor, 0.06F) : Color.FromArgb(224, 227, 237);
+            button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(210, 213, 224);
             button.TextColor = foreColor;
             button.Text = text;
             button.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Bold, GraphicsUnit.Point);

@@ -15,9 +15,6 @@ namespace ManuscriptCalculator
         private Color _pressedFillColor = Color.White;
         private Color _borderColor = Color.Transparent;
         private Color _textColor = Color.Black;
-        private Color _currentFill;
-        private readonly Timer _animTimer;
-        private int _animStep;
 
         public PillButton()
         {
@@ -29,11 +26,6 @@ namespace ManuscriptCalculator
             BackColor = UiPalette.CanvasTop;
             Size = new Size(88, 34);
             Font = new Font("Microsoft YaHei UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
-            _currentFill = FillColor;
-
-            _animTimer = new Timer();
-            _animTimer.Interval = 20;
-            _animTimer.Tick += OnAnimTick;
         }
 
         public int CornerRadius
@@ -45,12 +37,7 @@ namespace ManuscriptCalculator
         public Color FillColor
         {
             get { return _fillColor; }
-            set
-            {
-                _fillColor = value;
-                if (!_isHovered && !_isPressed) _currentFill = value;
-                Invalidate();
-            }
+            set { _fillColor = value; Invalidate(); }
         }
 
         public Color HoverFillColor
@@ -81,8 +68,7 @@ namespace ManuscriptCalculator
         {
             base.OnMouseEnter(e);
             _isHovered = true;
-            _animStep = 0;
-            _animTimer.Start();
+            Invalidate();
         }
 
         protected override void OnMouseLeave(EventArgs e)
@@ -90,8 +76,7 @@ namespace ManuscriptCalculator
             base.OnMouseLeave(e);
             _isHovered = false;
             _isPressed = false;
-            _animStep = 0;
-            _animTimer.Start();
+            Invalidate();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -114,45 +99,6 @@ namespace ManuscriptCalculator
             }
         }
 
-        private void OnAnimTick(object sender, EventArgs e)
-        {
-            _animStep++;
-            float t = Math.Min(1f, _animStep / 5f);
-            t = t * t * (3f - 2f * t); // ease in-out
-
-            if (_isPressed)
-            {
-                _currentFill = LerpColor(FillColor, PressedFillColor, 1f);
-            }
-            else if (_isHovered)
-            {
-                _currentFill = LerpColor(FillColor, HoverFillColor, t);
-            }
-            else
-            {
-                _currentFill = LerpColor(
-                    _currentFill,
-                    FillColor,
-                    t);
-            }
-
-            if (t >= 1f)
-            {
-                _animTimer.Stop();
-            }
-
-            Invalidate();
-        }
-
-        private static Color LerpColor(Color a, Color b, float t)
-        {
-            return Color.FromArgb(
-                (int)(a.A + (b.A - a.A) * t),
-                (int)(a.R + (b.R - a.R) * t),
-                (int)(a.G + (b.G - a.G) * t),
-                (int)(a.B + (b.B - a.B) * t));
-        }
-
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             using (SolidBrush brush = new SolidBrush(BackColor))
@@ -172,9 +118,25 @@ namespace ManuscriptCalculator
                 return;
             }
 
-            Color fill = Enabled ? _currentFill : Color.FromArgb(235, 235, 235);
-            float scale = _isPressed ? 0.97f : 1f;
+            Color fill;
+            if (!Enabled)
+            {
+                fill = Color.FromArgb(235, 235, 235);
+            }
+            else if (_isPressed)
+            {
+                fill = PressedFillColor;
+            }
+            else if (_isHovered)
+            {
+                fill = HoverFillColor;
+            }
+            else
+            {
+                fill = FillColor;
+            }
 
+            float scale = _isPressed ? 0.97f : 1f;
             if (scale < 1f)
             {
                 int dw = (int)(rect.Width * (1f - scale) / 2f);
