@@ -1,0 +1,21 @@
+# Binaries
+dist/
+*.exe
+*.dll
+*.pdb
+
+# Build artifacts
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+.vs/
+
+# IDE
+*.DotSettings.user
+.idea/
+
+# OS
+Thumbs.db
+Desktop.ini
