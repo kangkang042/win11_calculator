@@ -13,6 +13,7 @@ namespace ManuscriptCalculator
         private readonly Label _result;
         private readonly ToolTip _copyToolTip;
         private bool _isActive;
+        private bool _isHovered;
 
         public ManuscriptLineControl()
         {
@@ -95,7 +96,7 @@ namespace ManuscriptCalculator
 
         public int PreferredLineHeight
         {
-            get { return 82; }
+            get { return 68; }
         }
 
         public string ExpressionText
@@ -146,6 +147,10 @@ namespace ManuscriptCalculator
             {
                 backColor = UiPalette.ActivePaper;
             }
+            else if (_isHovered)
+            {
+                backColor = Color.FromArgb(247, 248, 251);
+            }
             else if (index % 2 == 0)
             {
                 backColor = UiPalette.PaperLight;
@@ -169,6 +174,20 @@ namespace ManuscriptCalculator
             FocusEditor();
         }
 
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            _isHovered = true;
+            Invalidate();
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            _isHovered = false;
+            Invalidate();
+        }
+
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             using (SolidBrush brush = new SolidBrush(BackColor))
@@ -181,18 +200,16 @@ namespace ManuscriptCalculator
         {
             base.OnPaint(e);
 
-            using (Pen topPen = new Pen(Color.FromArgb(235, 231, 223)))
-            using (Pen bottomPen = new Pen(Color.FromArgb(223, 220, 212)))
+            using (Pen linePen = new Pen(Color.FromArgb(232, 233, 237)))
             {
-                e.Graphics.DrawLine(topPen, 0, 0, Width, 0);
-                e.Graphics.DrawLine(bottomPen, 0, Height - 1, Width, Height - 1);
+                e.Graphics.DrawLine(linePen, 0, Height - 1, Width, Height - 1);
             }
 
             if (_isActive)
             {
-                using (SolidBrush accentBrush = new SolidBrush(Color.FromArgb(255, 168, 64)))
+                using (SolidBrush accentBrush = new SolidBrush(UiPalette.AccentStart))
                 {
-                    e.Graphics.FillRectangle(accentBrush, 0, 0, 4, Height);
+                    e.Graphics.FillRectangle(accentBrush, 0, 0, 3, Height);
                 }
             }
         }
@@ -204,8 +221,8 @@ namespace ManuscriptCalculator
             int resultWidth = Math.Min(380, Math.Max(190, Width / 3));
             int editorWidth = Math.Max(140, Width - left - rightPadding - resultWidth - 22);
             int editorHeight = Math.Max(36, _editor.PreferredHeight + 6);
-            int editorTop = Math.Max(14, (Height - editorHeight) / 2);
-            int placeholderTop = editorTop - 1;
+            int editorTop = Math.Max(10, (Height - editorHeight) / 2);
+            int placeholderTop = editorTop;
 
             _editor.Location = new Point(left, editorTop);
             _editor.Size = new Size(editorWidth, editorHeight);
@@ -213,8 +230,8 @@ namespace ManuscriptCalculator
             _placeholder.Location = new Point(left + HorizontalTextPadding, placeholderTop);
             _placeholder.Size = new Size(Math.Max(120, editorWidth - HorizontalTextPadding), editorHeight);
 
-            _result.Location = new Point(Width - resultWidth - rightPadding, 14);
-            _result.Size = new Size(resultWidth, 50);
+            _result.Location = new Point(Width - resultWidth - rightPadding, 10);
+            _result.Size = new Size(resultWidth, 46);
         }
 
         private void ApplyEditorMargins()
