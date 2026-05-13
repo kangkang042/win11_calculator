@@ -298,9 +298,9 @@ namespace ManuscriptCalculator
             bool isAccent = backColor.ToArgb() == UiPalette.AccentStart.ToArgb();
 
             button.FillColor = backColor;
-            button.HoverFillColor = isAccent ? ControlPaint.Light(backColor, 0.06F) : Color.FromArgb(255, 255, 255);
-            button.PressedFillColor = isAccent ? ControlPaint.Dark(backColor, 0.06F) : Color.FromArgb(243, 240, 235);
-            button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(232, 229, 223);
+            button.HoverFillColor = isAccent ? ControlPaint.Light(backColor, 0.06F) : Color.FromArgb(244, 245, 249);
+            button.PressedFillColor = isAccent ? ControlPaint.Dark(backColor, 0.06F) : Color.FromArgb(232, 234, 240);
+            button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(218, 220, 228);
             button.TextColor = foreColor;
             button.Text = text;
             button.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Bold, GraphicsUnit.Point);
