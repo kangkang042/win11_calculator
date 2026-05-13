@@ -34,7 +34,7 @@ namespace ManuscriptCalculator
             _editor.AcceptsReturn = false;
             _editor.WordWrap = false;
             _editor.ScrollBars = ScrollBars.None;
-            _editor.Font = new Font("Cascadia Mono", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            _editor.Font = new Font("Cascadia Mono", 19F, FontStyle.Regular, GraphicsUnit.Point);
             _editor.ForeColor = UiPalette.InkStrong;
             _editor.BackColor = UiPalette.PaperLight;
             _editor.Location = new Point(26, 22);
@@ -48,7 +48,7 @@ namespace ManuscriptCalculator
 
             _placeholder = new Label();
             _placeholder.AutoSize = false;
-            _placeholder.Font = new Font("Microsoft YaHei UI", 13.5F, FontStyle.Regular, GraphicsUnit.Point);
+            _placeholder.Font = new Font("Microsoft YaHei UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
             _placeholder.ForeColor = UiPalette.InkSoft;
             _placeholder.Text = "输入公式";
             _placeholder.TextAlign = ContentAlignment.MiddleLeft;
@@ -59,7 +59,7 @@ namespace ManuscriptCalculator
             _result = new Label();
             _result.AutoSize = false;
             _result.AutoEllipsis = true;
-            _result.Font = new Font("Cascadia Mono", 19F, FontStyle.Bold, GraphicsUnit.Point);
+            _result.Font = new Font("Cascadia Mono", 20F, FontStyle.Bold, GraphicsUnit.Point);
             _result.ForeColor = Color.FromArgb(22, 22, 22);
             _result.TextAlign = ContentAlignment.MiddleRight;
             _result.Text = "=";
@@ -96,7 +96,7 @@ namespace ManuscriptCalculator
 
         public int PreferredLineHeight
         {
-            get { return 68; }
+            get { return 78; }
         }
 
         public string ExpressionText
@@ -220,8 +220,8 @@ namespace ManuscriptCalculator
             int rightPadding = 22;
             int resultWidth = Math.Min(380, Math.Max(190, Width / 3));
             int editorWidth = Math.Max(140, Width - left - rightPadding - resultWidth - 22);
-            int editorHeight = Math.Max(36, _editor.PreferredHeight + 6);
-            int editorTop = Math.Max(10, (Height - editorHeight) / 2);
+            int editorHeight = Math.Max(40, _editor.PreferredHeight + 8);
+            int editorTop = Math.Max(12, (Height - editorHeight) / 2);
             int placeholderTop = editorTop;
 
             _editor.Location = new Point(left, editorTop);

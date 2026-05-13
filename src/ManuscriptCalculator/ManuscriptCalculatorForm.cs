@@ -53,7 +53,7 @@ namespace ManuscriptCalculator
 
             Panel titleBar = BuildTitleBar();
             titleBar.Dock = DockStyle.Top;
-            titleBar.Height = 68;
+            titleBar.Height = 78;
 
             BufferedPanel footer = BuildFooter();
             footer.Dock = DockStyle.Bottom;
@@ -230,7 +230,7 @@ namespace ManuscriptCalculator
             Label title = new Label();
             title.AutoSize = true;
             title.Text = "计算稿纸";
-            title.Font = new Font("Microsoft YaHei UI", 11F, FontStyle.Bold, GraphicsUnit.Point);
+            title.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
             title.ForeColor = UiPalette.InkStrong;
             title.MouseDown += BeginDrag;
 
@@ -303,13 +303,13 @@ namespace ManuscriptCalculator
             button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(210, 213, 224);
             button.TextColor = foreColor;
             button.Text = text;
-            button.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Bold, GraphicsUnit.Point);
-            button.CornerRadius = 14;
+            button.Font = new Font("Microsoft YaHei UI", 11F, FontStyle.Bold, GraphicsUnit.Point);
+            button.CornerRadius = 16;
             button.TabStop = false;
 
             Size measured = TextRenderer.MeasureText(text, button.Font);
-            int width = Math.Max(54, measured.Width + extraPadding + 8);
-            button.Size = new Size(width, 40);
+            int width = Math.Max(58, measured.Width + extraPadding + 10);
+            button.Size = new Size(width, 44);
             return button;
         }
 
