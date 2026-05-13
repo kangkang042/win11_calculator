@@ -14,9 +14,7 @@ namespace ManuscriptCalculator
         private readonly ToolTip _copyToolTip;
         private bool _isActive;
         private bool _isHovered;
-        private readonly Timer _flashTimer;
-        private bool _flashOn;
-        private int _flashCount;
+
 
         public ManuscriptLineControl()
         {
@@ -79,9 +77,6 @@ namespace ManuscriptCalculator
 
             Resize += delegate { LayoutInternal(); };
             LayoutInternal();
-            _flashTimer = new Timer();
-            _flashTimer.Interval = 70;
-            _flashTimer.Tick += OnFlashTick;
             SetEvaluation(EvaluationState.Empty());
         }
 
@@ -335,31 +330,6 @@ namespace ManuscriptCalculator
                 Clipboard.SetText(LastEvaluation.DisplayText);
                 _copyToolTip.Hide(this);
                 _copyToolTip.Show("已复制", this, _result.Left + _result.Width - 76, _result.Top - 8, 1100);
-
-                _flashCount = 0;
-                _flashOn = true;
-                _flashTimer.Start();
-            }
-        }
-
-        private void OnFlashTick(object sender, EventArgs e)
-        {
-            _flashOn = !_flashOn;
-            _flashCount++;
-
-            if (_flashCount >= 6)
-            {
-                _flashTimer.Stop();
-                _result.Text = "= " + LastEvaluation.DisplayText;
-                _result.ForeColor = Color.FromArgb(22, 22, 22);
-            }
-            else if (_flashOn)
-            {
-                _result.Text = "  " + LastEvaluation.DisplayText;
-            }
-            else
-            {
-                _result.Text = "= " + LastEvaluation.DisplayText;
             }
         }
     }
