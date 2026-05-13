@@ -18,7 +18,6 @@ namespace ManuscriptCalculator
         private readonly List<ManuscriptLineControl> _lines = new List<ManuscriptLineControl>();
         private readonly BufferedPanel _rowsHost;
         private readonly ToolTip _toolTip;
-        private PillButton _copyButton;
         private PillButton _clearButton;
         private PillButton _hideButton;
         private ManuscriptLineControl _activeLine;
@@ -72,7 +71,6 @@ namespace ManuscriptCalculator
             root.Controls.Add(titleBar);
 
             _toolTip = new ToolTip();
-            _toolTip.SetToolTip(_copyButton, "复制当前行结果");
             _toolTip.SetToolTip(_clearButton, "清空全部公式");
             _toolTip.SetToolTip(_hideButton, "收起到托盘");
 
@@ -234,9 +232,6 @@ namespace ManuscriptCalculator
             title.ForeColor = UiPalette.InkStrong;
             title.MouseDown += BeginDrag;
 
-            _copyButton = CreateCommandButton("复制结果", Color.White, UiPalette.InkStrong, 24);
-            _copyButton.Click += delegate { CopyActiveResult(); };
-
             _clearButton = CreateCommandButton("清空", Color.White, UiPalette.InkStrong, 24);
             _clearButton.Click += delegate { ClearAllLines(); };
 
@@ -246,7 +241,6 @@ namespace ManuscriptCalculator
 
             titleBar.Controls.Add(iconPlate);
             titleBar.Controls.Add(title);
-            titleBar.Controls.Add(_copyButton);
             titleBar.Controls.Add(_clearButton);
             titleBar.Controls.Add(_hideButton);
 
@@ -259,7 +253,6 @@ namespace ManuscriptCalculator
 
                 _hideButton.Location = new Point(right - _hideButton.Width, CenterY(titleBar.ClientSize.Height, _hideButton.Height));
                 _clearButton.Location = new Point(_hideButton.Left - 14 - _clearButton.Width, CenterY(titleBar.ClientSize.Height, _clearButton.Height));
-                _copyButton.Location = new Point(_clearButton.Left - 14 - _copyButton.Width, CenterY(titleBar.ClientSize.Height, _copyButton.Height));
             };
 
             return titleBar;
