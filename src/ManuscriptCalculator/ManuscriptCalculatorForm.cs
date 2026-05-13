@@ -52,7 +52,7 @@ namespace ManuscriptCalculator
 
             Panel titleBar = BuildTitleBar();
             titleBar.Dock = DockStyle.Top;
-            titleBar.Height = 80;
+            titleBar.Height = 56;
 
             BufferedPanel footer = BuildFooter();
             footer.Dock = DockStyle.Bottom;
@@ -213,55 +213,28 @@ namespace ManuscriptCalculator
             titleBar.BackColor = Color.Transparent;
             titleBar.MouseDown += BeginDrag;
 
-            SurfacePanel brandPlate = new SurfacePanel();
-            brandPlate.FillColor = Color.FromArgb(252, 250, 246);
-            brandPlate.FillColor2 = Color.FromArgb(246, 243, 238);
-            brandPlate.StrokeColor = Color.FromArgb(221, 222, 226);
-            brandPlate.CornerRadius = 22;
-            brandPlate.Size = new Size(292, 42);
-            brandPlate.MouseDown += BeginDrag;
-
             CalculatorGlyphBadge iconPlate = new CalculatorGlyphBadge();
             iconPlate.MouseDown += BeginDrag;
+            iconPlate.Size = new Size(24, 22);
 
             Label title = new Label();
             title.AutoSize = true;
             title.Text = "计算稿纸";
-            title.Font = new Font("Microsoft YaHei UI", 13.5F, FontStyle.Bold, GraphicsUnit.Point);
+            title.Font = new Font("Microsoft YaHei UI", 11F, FontStyle.Bold, GraphicsUnit.Point);
             title.ForeColor = UiPalette.InkStrong;
             title.MouseDown += BeginDrag;
 
-            Label subTitle = new Label();
-            subTitle.AutoSize = true;
-            subTitle.Text = "逐行演算";
-            subTitle.Font = new Font("Microsoft YaHei UI", 9.8F, FontStyle.Regular, GraphicsUnit.Point);
-            subTitle.ForeColor = UiPalette.InkMuted;
-            subTitle.MouseDown += BeginDrag;
-
-            _copyButton = CreateCommandButton("复制结果", Color.FromArgb(251, 248, 244), UiPalette.InkStrong, 24);
+            _copyButton = CreateCommandButton("复制结果", Color.White, UiPalette.InkStrong, 18);
             _copyButton.Click += delegate { CopyActiveResult(); };
 
-            _clearButton = CreateCommandButton("清空", Color.FromArgb(251, 248, 244), UiPalette.InkStrong, 20);
+            _clearButton = CreateCommandButton("清空", Color.White, UiPalette.InkStrong, 18);
             _clearButton.Click += delegate { ClearAllLines(); };
 
-            _hideButton = CreateCommandButton("收起", Color.FromArgb(251, 248, 244), UiPalette.InkStrong, 20);
+            _hideButton = CreateCommandButton("收起", Color.White, UiPalette.InkStrong, 18);
             _hideButton.Click += delegate { RequestHide(); };
 
-            brandPlate.Controls.Add(iconPlate);
-            brandPlate.Controls.Add(title);
-            brandPlate.Controls.Add(subTitle);
-
-            brandPlate.Resize += delegate
-            {
-                iconPlate.Location = new Point(12, CenterY(brandPlate.Height, iconPlate.Height));
-                title.Location = new Point(54, CenterY(brandPlate.Height, title.Height));
-                subTitle.Location = new Point(title.Right + 18, CenterY(brandPlate.Height, subTitle.Height));
-            };
-            iconPlate.Location = new Point(12, CenterY(brandPlate.Height, iconPlate.Height));
-            title.Location = new Point(54, CenterY(brandPlate.Height, title.Height));
-            subTitle.Location = new Point(title.Right + 18, CenterY(brandPlate.Height, subTitle.Height));
-
-            titleBar.Controls.Add(brandPlate);
+            titleBar.Controls.Add(iconPlate);
+            titleBar.Controls.Add(title);
             titleBar.Controls.Add(_copyButton);
             titleBar.Controls.Add(_clearButton);
             titleBar.Controls.Add(_hideButton);
@@ -270,13 +243,13 @@ namespace ManuscriptCalculator
             {
                 int right = titleBar.ClientSize.Width;
 
-                brandPlate.Location = new Point(0, CenterY(titleBar.ClientSize.Height, brandPlate.Height));
+                iconPlate.Location = new Point(0, CenterY(titleBar.ClientSize.Height, iconPlate.Height));
+                title.Location = new Point(32, CenterY(titleBar.ClientSize.Height, title.Height));
 
                 _hideButton.Location = new Point(right - _hideButton.Width, CenterY(titleBar.ClientSize.Height, _hideButton.Height));
-                _clearButton.Location = new Point(_hideButton.Left - 10 - _clearButton.Width, CenterY(titleBar.ClientSize.Height, _clearButton.Height));
-                _copyButton.Location = new Point(_clearButton.Left - 10 - _copyButton.Width, CenterY(titleBar.ClientSize.Height, _copyButton.Height));
+                _clearButton.Location = new Point(_hideButton.Left - 8 - _clearButton.Width, CenterY(titleBar.ClientSize.Height, _clearButton.Height));
+                _copyButton.Location = new Point(_clearButton.Left - 8 - _copyButton.Width, CenterY(titleBar.ClientSize.Height, _copyButton.Height));
             };
-            brandPlate.Location = new Point(0, CenterY(titleBar.Height, brandPlate.Height));
 
             return titleBar;
         }
@@ -331,11 +304,12 @@ namespace ManuscriptCalculator
             button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(232, 229, 223);
             button.TextColor = foreColor;
             button.Text = text;
-            button.Font = new Font("Microsoft YaHei UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            button.Font = new Font("Microsoft YaHei UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
+            button.CornerRadius = 10;
             button.TabStop = false;
 
             Size measured = TextRenderer.MeasureText(text, button.Font);
-            int width = Math.Max(38, measured.Width + extraPadding);
+            int width = Math.Max(34, measured.Width + extraPadding);
             button.Size = new Size(width, 34);
             return button;
         }
