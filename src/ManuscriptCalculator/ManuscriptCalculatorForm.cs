@@ -23,6 +23,7 @@ namespace ManuscriptCalculator
         private PillButton _hideButton;
         private ManuscriptLineControl _activeLine;
         private int _lastRowsWidth = -1;
+        private bool _isActivated;
 
         public event EventHandler HideRequested;
 
@@ -107,11 +108,19 @@ namespace ManuscriptCalculator
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
+            _isActivated = true;
             if (IsHandleCreated)
             {
                 NativeMethods.ApplyWindowChrome(Handle);
                 Invalidate(true);
             }
+        }
+
+        protected override void OnDeactivate(EventArgs e)
+        {
+            base.OnDeactivate(e);
+            _isActivated = false;
+            Invalidate(true);
         }
 
         protected override void OnHandleCreated(EventArgs e)
@@ -186,7 +195,8 @@ namespace ManuscriptCalculator
         {
             base.OnPaint(e);
 
-            using (Pen pen = new Pen(UiPalette.WindowBorder))
+            Color borderColor = _isActivated ? UiPalette.AccentStart : UiPalette.WindowBorder;
+            using (Pen pen = new Pen(borderColor))
             {
                 e.Graphics.DrawLine(pen, 0, 1, 0, Height - 2);
                 e.Graphics.DrawLine(pen, Width - 1, 1, Width - 1, Height - 2);
