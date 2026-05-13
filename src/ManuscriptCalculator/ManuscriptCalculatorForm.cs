@@ -240,7 +240,7 @@ namespace ManuscriptCalculator
             Label title = new Label();
             title.AutoSize = true;
             title.Text = "计算稿纸";
-            title.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            title.Font = new Font("Microsoft YaHei UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
             title.ForeColor = UiPalette.InkStrong;
             title.MouseDown += BeginDrag;
 
