@@ -248,7 +248,6 @@ namespace ManuscriptCalculator
             _clearButton.Click += delegate { ClearAllLines(); };
 
             _hideButton = CreateCommandButton("✕", Color.White, UiPalette.InkStrong, 16);
-            _hideButton.CornerRadius = 18;
             _hideButton.Click += delegate { RequestHide(); };
 
             titleBar.Controls.Add(iconPlate);
@@ -308,13 +307,13 @@ namespace ManuscriptCalculator
             button.BorderColor = isAccent ? Color.Transparent : Color.FromArgb(210, 213, 224);
             button.TextColor = foreColor;
             button.Text = text;
-            button.Font = new Font("Microsoft YaHei UI", 11F, FontStyle.Bold, GraphicsUnit.Point);
-            button.CornerRadius = 16;
+            button.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            button.CornerRadius = 18;
             button.TabStop = false;
 
             Size measured = TextRenderer.MeasureText(text, button.Font);
-            int width = Math.Max(58, measured.Width + extraPadding + 10);
-            button.Size = new Size(width, 44);
+            int width = Math.Max(64, measured.Width + extraPadding + 12);
+            button.Size = new Size(width, 48);
             return button;
         }
 
