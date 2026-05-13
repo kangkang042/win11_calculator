@@ -135,6 +135,18 @@ namespace ManuscriptCalculator
                 return true;
             }
 
+            if (keyData == (Keys.Control | Keys.C))
+            {
+                CopyActiveResult();
+                return true;
+            }
+
+            if (keyData == (Keys.Control | Keys.R))
+            {
+                ClearAllLines();
+                return true;
+            }
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -266,7 +278,7 @@ namespace ManuscriptCalculator
 
             Label shortcuts = new Label();
             shortcuts.AutoSize = true;
-            shortcuts.Text = "Enter 下一行    ↑↓ 切换行    Esc 收起";
+            shortcuts.Text = "Enter 下一行    ↑↓ 切换    Ctrl+C 复制    Ctrl+R 清空    Esc 收起";
             shortcuts.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             shortcuts.ForeColor = UiPalette.InkSoft;
 
