@@ -240,7 +240,8 @@ namespace ManuscriptCalculator
             _clearButton = CreateCommandButton("清空", Color.White, UiPalette.InkStrong, 18);
             _clearButton.Click += delegate { ClearAllLines(); };
 
-            _hideButton = CreateCommandButton("收起", Color.White, UiPalette.InkStrong, 18);
+            _hideButton = CreateCommandButton("✕", Color.White, UiPalette.InkSoft, 12);
+            _hideButton.CornerRadius = 18;
             _hideButton.Click += delegate { RequestHide(); };
 
             titleBar.Controls.Add(iconPlate);

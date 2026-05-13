@@ -27,7 +27,6 @@ namespace ManuscriptCalculator
                      ControlStyles.UserPaint, true);
 
             BackColor = UiPalette.CanvasTop;
-            Cursor = Cursors.Hand;
             Size = new Size(88, 34);
             Font = new Font("Microsoft YaHei UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
             _currentFill = FillColor;
