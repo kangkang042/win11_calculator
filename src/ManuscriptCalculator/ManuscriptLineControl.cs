@@ -60,9 +60,10 @@ namespace ManuscriptCalculator
             _result.AutoSize = false;
             _result.AutoEllipsis = true;
             _result.Font = new Font("Cascadia Mono", 20F, FontStyle.Bold, GraphicsUnit.Point);
-            _result.ForeColor = Color.FromArgb(22, 22, 22);
+            _result.ForeColor = UiPalette.InkStrong;
             _result.TextAlign = ContentAlignment.MiddleRight;
             _result.Text = "=";
+            _result.Cursor = Cursors.Hand;
             _result.Click += OnResultClicked;
 
             _copyToolTip = new ToolTip();
@@ -127,7 +128,7 @@ namespace ManuscriptCalculator
             else if (state.Success)
             {
                 _result.Text = "= " + state.DisplayText;
-                _result.ForeColor = Color.FromArgb(22, 22, 22);
+                _result.ForeColor = UiPalette.InkStrong;
             }
             else
             {
@@ -204,14 +205,6 @@ namespace ManuscriptCalculator
             {
                 e.Graphics.DrawLine(linePen, 0, Height - 1, Width, Height - 1);
             }
-
-            if (_isActive)
-            {
-                using (SolidBrush accentBrush = new SolidBrush(UiPalette.AccentStart))
-                {
-                    e.Graphics.FillRectangle(accentBrush, 0, 0, 3, Height);
-                }
-            }
         }
 
         private void LayoutInternal()
@@ -257,7 +250,7 @@ namespace ManuscriptCalculator
         {
             bool isEmpty = string.IsNullOrWhiteSpace(_editor.Text);
             _placeholder.Visible = isEmpty && !_editor.Focused;
-            _placeholder.ForeColor = _editor.Focused ? Color.FromArgb(172, 161, 142) : UiPalette.InkSoft;
+            _placeholder.ForeColor = _editor.Focused ? UiPalette.InkMuted : UiPalette.InkSoft;
         }
 
         private void OnFocusChanged(object sender, EventArgs e)

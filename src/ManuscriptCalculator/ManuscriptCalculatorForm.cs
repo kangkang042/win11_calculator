@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace ManuscriptCalculator
@@ -195,7 +194,7 @@ namespace ManuscriptCalculator
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            using (LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle, UiPalette.CanvasTop, UiPalette.CanvasBottom, 90F))
+            using (SolidBrush brush = new SolidBrush(UiPalette.Canvas))
             {
                 e.Graphics.FillRectangle(brush, ClientRectangle);
             }
@@ -278,7 +277,7 @@ namespace ManuscriptCalculator
             Label shortcuts = new Label();
             shortcuts.AutoSize = true;
             shortcuts.Text = "Enter 下一行    ↑↓ 切换    Ctrl+C 复制    Ctrl+R 清空    Esc 收起";
-            shortcuts.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            shortcuts.Font = new Font("Microsoft YaHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             shortcuts.ForeColor = UiPalette.InkSoft;
 
             footer.Controls.Add(shortcuts);
