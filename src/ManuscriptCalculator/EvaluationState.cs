@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace ManuscriptCalculator
 {
-    internal sealed class EvaluationState
+    public sealed class EvaluationState
     {
         public bool HasExpression { get; set; }
 

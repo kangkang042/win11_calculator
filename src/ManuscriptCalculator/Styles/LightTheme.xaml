@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 纯白配色 -->
+    <SolidColorBrush x:Key="CanvasBrush" Color="#FFFCFCFD" />
+    <SolidColorBrush x:Key="PaperLightBrush" Color="#FFFCFCFD" />
+    <SolidColorBrush x:Key="PaperAlternateBrush" Color="#FFF1F2F6" />
+    <SolidColorBrush x:Key="ActivePaperBrush" Color="#FFEEF1FA" />
+    <SolidColorBrush x:Key="InkStrongBrush" Color="#FF1B1B1B" />
+    <SolidColorBrush x:Key="InkMutedBrush" Color="#FF6B6B6B" />
+    <SolidColorBrush x:Key="InkSoftBrush" Color="#FF999999" />
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#FFE2E2E2" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF4A6CF7" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="#FFD1524F" />
+    <SolidColorBrush x:Key="SeparatorBrush" Color="#FFEDEDF0" />
+    <SolidColorBrush x:Key="ButtonFillBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ButtonHoverFillBrush" Color="#FFF5F5F7" />
+    <SolidColorBrush x:Key="ButtonPressedFillBrush" Color="#FFEAEAF0" />
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#FFDEDEE3" />
+    <SolidColorBrush x:Key="HoverRowBrush" Color="#FFF8F9FB" />
+</ResourceDictionary>

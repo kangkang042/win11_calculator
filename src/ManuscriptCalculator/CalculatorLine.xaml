@@ -1,0 +1,78 @@
+<UserControl x:Class="ManuscriptCalculator.CalculatorLine"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ManuscriptCalculator"
+             Height="60">
+    <UserControl.Resources>
+        <local:BoolToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+    <Grid>
+        <Border x:Name="root" CornerRadius="8" Padding="24,4,24,4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" MinWidth="240" />
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <TextBox x:Name="editor"
+                             Text="{Binding Expression, UpdateSourceTrigger=PropertyChanged}"
+                             Background="Transparent" BorderThickness="0"
+                             FontFamily="Cascadia Code, Cascadia Mono, Consolas" FontSize="26"
+                             Foreground="{DynamicResource InkStrongBrush}"
+                             VerticalContentAlignment="Center"
+                             Padding="8,0"
+                             AcceptsReturn="False"
+                             KeyDown="OnEditorKeyDown" />
+                    <TextBlock Text="输入公式"
+                               Foreground="{DynamicResource InkSoftBrush}"
+                               FontFamily="Segoe UI Variable, Segoe UI, Microsoft YaHei UI" FontSize="16"
+                               VerticalAlignment="Center" Margin="14,0,0,0"
+                               IsHitTestVisible="False">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasExpression}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <TextBlock x:Name="resultHost" Grid.Column="1"
+                           Text="{Binding DisplayResult}"
+                           FontFamily="Cascadia Code, Cascadia Mono, Consolas" FontSize="29" FontWeight="SemiBold"
+                           VerticalAlignment="Center" HorizontalAlignment="Right"
+                           Margin="0,0,22,0"
+                           Cursor="Hand"
+                           MouseLeftButtonDown="OnResultClicked">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{DynamicResource InkStrongBrush}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasError}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource ErrorBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding HasExpression}" Value="False">
+                                    <Setter Property="Foreground" Value="{DynamicResource InkSoftBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <Popup PlacementTarget="{Binding ElementName=resultHost}"
+                       Placement="Top" HorizontalOffset="0" VerticalOffset="-4"
+                       IsOpen="{Binding ShowCopyTip}"
+                       AllowsTransparency="True"
+                       PopupAnimation="Fade">
+                    <Border Background="#CC2D2D2D" CornerRadius="6" Padding="10,5">
+                        <TextBlock Text="已复制" Foreground="White" FontSize="13"
+                                   FontFamily="Segoe UI Variable, Segoe UI, Microsoft YaHei UI" />
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource SeparatorBrush}"
+                VerticalAlignment="Bottom" Height="1" Margin="24,0,24,0" />
+    </Grid>
+</UserControl>

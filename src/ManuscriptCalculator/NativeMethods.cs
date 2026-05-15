@@ -87,6 +87,18 @@ namespace ManuscriptCalculator
         [DllImport("dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int dwAttribute, ref int pvAttribute, int cbAttribute);
 
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS pMarInset);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MARGINS
+        {
+            public int cxLeftWidth;
+            public int cxRightWidth;
+            public int cyTopHeight;
+            public int cyBottomHeight;
+        }
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool SetProcessDPIAware();
 
@@ -169,41 +181,41 @@ namespace ManuscriptCalculator
 
         public static void ApplyWindowChrome(IntPtr handle)
         {
+            // 扩展 DWM 框架覆盖整个客户区，让 Mica 云母能穿透
+            try
+            {
+                MARGINS margins = new MARGINS { cxLeftWidth = -1, cxRightWidth = -1, cyTopHeight = -1, cyBottomHeight = -1 };
+                DwmExtendFrameIntoClientArea(handle, ref margins);
+            }
+            catch (DllNotFoundException) { }
+            catch (EntryPointNotFoundException) { }
+
+            // Win11 圆角
             try
             {
                 int rounded = DWMWCP_ROUND;
                 DwmSetWindowAttribute(handle, DWMWA_WINDOW_CORNER_PREFERENCE, ref rounded, Marshal.SizeOf(typeof(int)));
             }
-            catch (DllNotFoundException)
-            {
-            }
-            catch (EntryPointNotFoundException)
-            {
-            }
+            catch (DllNotFoundException) { }
+            catch (EntryPointNotFoundException) { }
 
+            // 无边框颜色（让 DWM 自动处理）
             try
             {
                 int noBorder = DWMWA_COLOR_NONE;
                 DwmSetWindowAttribute(handle, DWMWA_BORDER_COLOR, ref noBorder, Marshal.SizeOf(typeof(int)));
             }
-            catch (DllNotFoundException)
-            {
-            }
-            catch (EntryPointNotFoundException)
-            {
-            }
+            catch (DllNotFoundException) { }
+            catch (EntryPointNotFoundException) { }
 
+            // Mica 云母背景
             try
             {
                 int backdrop = DWMSBT_MAINWINDOW;
                 DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, Marshal.SizeOf(typeof(int)));
             }
-            catch (DllNotFoundException)
-            {
-            }
-            catch (EntryPointNotFoundException)
-            {
-            }
+            catch (DllNotFoundException) { }
+            catch (EntryPointNotFoundException) { }
         }
     }
 }

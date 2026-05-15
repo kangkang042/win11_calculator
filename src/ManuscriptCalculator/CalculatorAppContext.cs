@@ -1,16 +1,20 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
+using System.Reflection;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using Microsoft.Win32;
 
 namespace ManuscriptCalculator
 {
-    internal sealed class CalculatorAppContext : ApplicationContext
+    internal sealed class CalculatorAppContext : IDisposable
     {
         private const string RunRegistryKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
         private const string AppName = "ManuscriptCalculator";
 
-        private readonly ManuscriptCalculatorForm _form;
+        private readonly MainWindow _window;
         private readonly DoubleCtrlMonitor _monitor;
         private readonly NotifyIcon _notifyIcon;
         private readonly Icon _appIcon;
@@ -18,6 +22,7 @@ namespace ManuscriptCalculator
         private readonly ToolStripMenuItem _hideItem;
         private readonly ToolStripMenuItem _autoStartItem;
         private bool _isExiting;
+        private IntPtr _handle;
 
         public CalculatorAppContext()
         {
@@ -38,7 +43,7 @@ namespace ManuscriptCalculator
             exitItem.Click += delegate
             {
                 _isExiting = true;
-                ExitThread();
+                System.Windows.Application.Current.Shutdown();
             };
 
             menu.Items.Add(_showItem);
@@ -54,11 +59,17 @@ namespace ManuscriptCalculator
             _notifyIcon.ContextMenuStrip = menu;
             _notifyIcon.DoubleClick += delegate { ShowMainWindow(); };
 
-            _form = new ManuscriptCalculatorForm();
-            _form.Icon = _appIcon;
-            _form.HideRequested += OnHideRequested;
-            _form.FormClosing += OnFormClosing;
-            _form.VisibleChanged += delegate { UpdateMenuState(); };
+            var vm = new MainViewModel();
+            vm.HideRequested += OnHideRequested;
+
+            _window = new MainWindow();
+            _window.DataContext = vm;
+            _window.SourceInitialized += (s, e) =>
+            {
+                _handle = new WindowInteropHelper(_window).Handle;
+            };
+            _window.Closing += OnWindowClosing;
+            _window.IsVisibleChanged += (s, e) => UpdateMenuState();
 
             _monitor = new DoubleCtrlMonitor();
             _monitor.Activated += delegate { ShowMainWindow(); };
@@ -94,7 +105,8 @@ namespace ManuscriptCalculator
                     if (key == null) return false;
                     string value = key.GetValue(AppName) as string;
                     if (string.IsNullOrEmpty(value)) return false;
-                    return value.IndexOf(Application.ExecutablePath, StringComparison.OrdinalIgnoreCase) >= 0;
+                    string exePath = Assembly.GetExecutingAssembly().Location;
+                    return value.IndexOf(exePath, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
             }
             catch { return false; }
@@ -109,7 +121,8 @@ namespace ManuscriptCalculator
                     if (key == null) return;
                     if (_autoStartItem.Checked)
                     {
-                        key.SetValue(AppName, "\"" + Application.ExecutablePath + "\" /minimized");
+                        string exePath = Assembly.GetExecutingAssembly().Location;
+                        key.SetValue(AppName, "\"" + exePath + "\" /minimized");
                     }
                     else
                     {
@@ -119,7 +132,8 @@ namespace ManuscriptCalculator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("设置开机自启失败：" + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.MessageBox.Show("设置开机自启失败：" + ex.Message, "错误",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 _autoStartItem.Checked = !_autoStartItem.Checked;
             }
         }
@@ -129,42 +143,38 @@ namespace ManuscriptCalculator
             HideMainWindow();
         }
 
-        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (_isExiting)
-            {
-                return;
-            }
-
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                e.Cancel = true;
-                HideMainWindow();
-            }
+            if (_isExiting) return;
+            e.Cancel = true;
+            HideMainWindow();
         }
 
         private void ShowMainWindow()
         {
-            if (!_form.Visible)
+            if (_window.Visibility != Visibility.Visible)
             {
-                _form.Show();
+                _window.Show();
             }
 
-            if (_form.WindowState == FormWindowState.Minimized)
+            if (_window.WindowState == WindowState.Minimized)
             {
-                _form.WindowState = FormWindowState.Normal;
+                _window.WindowState = WindowState.Normal;
             }
 
-            NativeMethods.ShowAndActivate(_form.Handle);
-            _form.FocusActiveEditor();
+            if (_handle != IntPtr.Zero)
+            {
+                NativeMethods.ShowAndActivate(_handle);
+            }
+
             UpdateMenuState();
         }
 
         private void HideMainWindow()
         {
-            if (_form.Visible)
+            if (_window.Visibility == Visibility.Visible)
             {
-                _form.Hide();
+                _window.Hide();
             }
 
             UpdateMenuState();
@@ -172,12 +182,12 @@ namespace ManuscriptCalculator
 
         private void UpdateMenuState()
         {
-            bool visible = _form.Visible;
+            bool visible = _window.Visibility == Visibility.Visible;
             _showItem.Enabled = !visible;
             _hideItem.Enabled = visible;
         }
 
-        protected override void ExitThreadCore()
+        public void Dispose()
         {
             _isExiting = true;
 
@@ -192,17 +202,15 @@ namespace ManuscriptCalculator
                 _notifyIcon.Dispose();
             }
 
-            if (_form != null)
-            {
-                _form.Dispose();
-            }
-
             if (_appIcon != null)
             {
                 _appIcon.Dispose();
             }
 
-            base.ExitThreadCore();
+            if (_window != null)
+            {
+                _window.Closing -= OnWindowClosing;
+            }
         }
     }
 }
