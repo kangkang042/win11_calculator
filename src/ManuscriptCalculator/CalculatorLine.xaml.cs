@@ -37,6 +37,16 @@ namespace ManuscriptCalculator
                     {
                         UpdateBackground();
                     }
+                    if (args.PropertyName == "IsActive" && vm.IsActive)
+                    {
+                        Dispatcher.BeginInvoke(
+                            System.Windows.Threading.DispatcherPriority.Input,
+                            new Action(() =>
+                            {
+                                editor.Focus();
+                                editor.CaretIndex = editor.Text.Length;
+                            }));
+                    }
                 };
             }
         }

@@ -137,9 +137,21 @@ namespace ManuscriptCalculator
         {
             int index = Lines.IndexOf(ActiveLine);
             if (index < 0) return;
+
+            string carryResult = null;
+            if (ActiveLine.LastEvaluation != null && ActiveLine.LastEvaluation.Success)
+            {
+                carryResult = ActiveLine.LastEvaluation.DisplayText;
+            }
+
             EnsureTrailingBlankLine();
             if (index + 1 >= Lines.Count) AddLine();
             ActiveLine = Lines[Math.Min(index + 1, Lines.Count - 1)];
+
+            if (carryResult != null)
+            {
+                ActiveLine.Expression = carryResult;
+            }
         }
 
         public void DeleteLineIfEmpty()
