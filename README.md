@@ -1,48 +1,31 @@
 # 计算稿纸
 
-这是一个仿照utools中计算稿纸而开发的Windows桌面计算应用，特性如下：
-- 逐行输入公式，保留计算过程的同时，右侧实时显示结果
-- 左键单击右侧结果，直接复制结果
-- 双击 `Alt` 呼出主窗口
-- 关闭窗口时自动收起到系统托盘，热键继续可用
+Win11 风格 WPF 桌面计算器。逐行输入公式，保留计算过程，右侧实时显示结果。
 
 ![计算稿纸示例](例图.png)
 
-## 运行方式
+## 运行
 
-在当前目录执行：
-
-```powershell
-.\run.ps1
-```
-
-只构建不启动：
+直接启动 `src\ManuscriptCalculator\bin\Release\ManuscriptCalculator.exe`，或构建：
 
 ```powershell
-.\build.ps1
+& "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe" src\ManuscriptCalculator\ManuscriptCalculator.csproj /p:Configuration=Release
 ```
 
-生成结果：
+## 操作
 
-- `dist\ManuscriptCalculator.exe`
+| 操作 | 快捷键 |
+|------|--------|
+| 下一行 | `Enter` |
+| 切换行 | `↑` `↓` |
+| 空行删除 | `Backspace` |
+| 复制当前行结果 | `Ctrl+C` 或单击右侧结果 |
+| 清空全部 | `Ctrl+R` |
+| 收起窗口 | `Esc` |
+| 呼出窗口 | 双击 `Alt` |
 
-## 使用说明
+托盘右键可设置开机自启、退出。
 
-- 双击 `Alt`：显示并聚焦窗口
-- 左键单击右侧结果：直接复制结果
-- `Ctrl+C`：复制当前行结果
-- `Ctrl+R`：清空全部公式
-- `Enter`：跳到下一行
-- `Up` / `Down`：切换行
-- `Backspace`：在空白行删除当前行
-- `Esc`：收起到托盘
-- 托盘图标右键可退出程序
+## 表达式
 
-## 表达式支持
-
-- 基本四则运算：`+ - * /`
-- 括号：`( )`
-- 百分比：`50%`
-- 幂运算：`2^8`
-- 常量：`pi`、`e`
-- 函数：`sqrt`、`abs`、`sin`、`cos`、`tan`、`log`、`ln`、`round`、`floor`、`ceil`、`min`、`max`、`pow`
+四则运算、括号、百分比、幂、常量（`pi` `e`）、函数（`sqrt` `abs` `sin` `cos` `tan` `log` `ln` `round` `floor` `ceil` `min` `max` `pow`）
